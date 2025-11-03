@@ -7,9 +7,10 @@ import SimpleStepView from './SimpleStepView';
 interface RepeatBlockViewProps {
   block: RepeatBlock;
   onUpdate: (blockId: string, updatedBlock: WorkoutBlock) => void;
+  onDelete: (blockId: string) => void;
 }
 
-const RepeatBlockView: React.FC<RepeatBlockViewProps> = ({ block, onUpdate }) => {
+const RepeatBlockView: React.FC<RepeatBlockViewProps> = ({ block, onUpdate, onDelete }) => {
   const {
     attributes,
     listeners,
@@ -38,6 +39,11 @@ const RepeatBlockView: React.FC<RepeatBlockViewProps> = ({ block, onUpdate }) =>
     onUpdate(block.id, { ...block, steps: updatedSteps });
   };
 
+  const handleStepDelete = (stepId: string) => {
+    const updatedSteps = block.steps.filter((step) => step.id !== stepId);
+    onUpdate(block.id, { ...block, steps: updatedSteps });
+  };
+
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <div>
@@ -47,10 +53,16 @@ const RepeatBlockView: React.FC<RepeatBlockViewProps> = ({ block, onUpdate }) =>
           onChange={handleRepetitionsChange}
         />
         x
+        <button onClick={() => onDelete(block.id)}>Delete</button>
       </div>
       <div>
         {block.steps.map((step) => (
-          <SimpleStepView key={step.id} step={step} onUpdate={handleStepUpdate} />
+          <SimpleStepView
+            key={step.id}
+            step={step}
+            onUpdate={handleStepUpdate}
+            onDelete={handleStepDelete}
+          />
         ))}
       </div>
     </div>

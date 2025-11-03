@@ -6,9 +6,10 @@ import { SimpleStep, WorkoutBlock } from '../core/types';
 interface SimpleStepViewProps {
   step: SimpleStep;
   onUpdate: (stepId: string, updatedStep: WorkoutBlock) => void;
+  onDelete: (stepId: string) => void;
 }
 
-const SimpleStepView: React.FC<SimpleStepViewProps> = ({ step, onUpdate }) => {
+const SimpleStepView: React.FC<SimpleStepViewProps> = ({ step, onUpdate, onDelete }) => {
   const {
     attributes,
     listeners,
@@ -31,7 +32,7 @@ const SimpleStepView: React.FC<SimpleStepViewProps> = ({ step, onUpdate }) => {
   };
 
   const handleTargetChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    if (step.target.type === 'percent_ftp') {
+    if (step.target.type === 'percent_ftp' || step.target.type === 'pace_seconds_per_km') {
       const newRange = [...step.target.range];
       newRange[index] = parseInt(e.target.value, 10);
       onUpdate(step.id, {
@@ -61,7 +62,22 @@ const SimpleStepView: React.FC<SimpleStepViewProps> = ({ step, onUpdate }) => {
           </div>
         );
       case 'pace_seconds_per_km':
-        return <p>Pace editing not implemented yet.</p>;
+        return (
+          <div>
+            <input
+              type="number"
+              value={step.target.range[0]}
+              onChange={(e) => handleTargetChange(e, 0)}
+            />
+            -
+            <input
+              type="number"
+              value={step.target.range[1]}
+              onChange={(e) => handleTargetChange(e, 1)}
+            />
+            s/km
+          </div>
+        );
       case 'rest':
         return <p>Rest</p>;
     }
@@ -81,6 +97,7 @@ const SimpleStepView: React.FC<SimpleStepViewProps> = ({ step, onUpdate }) => {
       <div>
         Target: {renderTargetInputs()}
       </div>
+      <button onClick={() => onDelete(step.id)}>Delete</button>
     </div>
   );
 };

@@ -24,14 +24,14 @@ function App() {
 
   const initialWorkout: Workout = {
     id: 'workout-1',
-    name: 'My First Workout',
-    sport: 'cycling',
+    name: 'My First Running Workout',
+    sport: 'running',
     blocks: [
       {
         id: 'step-1',
         type: 'step',
         duration_seconds: 600,
-        target: { type: 'percent_ftp', range: [80, 90] },
+        target: { type: 'pace_seconds_per_km', range: [360, 390] }, // 6:00-6:30 min/km
       },
       {
         id: 'repeat-1',
@@ -42,7 +42,7 @@ function App() {
             id: 'step-2',
             type: 'step',
             duration_seconds: 180,
-            target: { type: 'percent_ftp', range: [110, 120] },
+            target: { type: 'pace_seconds_per_km', range: [300, 330] }, // 5:00-5:30 min/km
           },
           {
             id: 'step-3',
@@ -56,7 +56,7 @@ function App() {
         id: 'step-4',
         type: 'step',
         duration_seconds: 300,
-        target: { type: 'percent_ftp', range: [50, 60] },
+        target: { type: 'pace_seconds_per_km', range: [420, 450] }, // 7:00-7:30 min/km
       },
     ],
   };
@@ -105,6 +105,13 @@ function App() {
     });
   };
 
+  const deleteBlock = (blockId: string) => {
+    setWorkout({
+      ...workout,
+      blocks: workout.blocks.filter((block) => block.id !== blockId),
+    });
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -129,7 +136,11 @@ function App() {
       <div style={mainContentStyle}>
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={workout.blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-            <WorkoutView workout={workout} onUpdateBlock={updateBlock} />
+            <WorkoutView
+              workout={workout}
+              onUpdateBlock={updateBlock}
+              onDeleteBlock={deleteBlock}
+            />
           </SortableContext>
         </DndContext>
       </div>
