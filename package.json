@@ -1,0 +1,48 @@
+{
+  "name": "workout_builder",
+  "version": "1.0.0",
+  "description": "Workout Builder",
+  "main": "dist/electron/main.js",
+  "homepage": "./",
+  "scripts": {
+    "build:react": "webpack --mode production",
+    "build:electron": "tsc",
+    "watch:react": "webpack --mode development --watch",
+    "watch:electron": "tsc --watch",
+    "start:electron": "wait-on dist/index.html dist/electron/main.js && electron .",
+    "start": "concurrently \"npm:watch:react\" \"npm:watch:electron\" \"npm:start:electron\"",
+    "build": "npm run build:react && npm run build:electron",
+    "package": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "com.workoutbuilder.app",
+    "productName": "Workout Builder",
+    "files": [
+      "dist/**/*"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.12",
+    "html-webpack-plugin": "^5.6.4",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "wait-on": "^9.0.1",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
+  }
+}
